@@ -31,10 +31,15 @@
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
     <Compile Include="HttpClient.cs" />
+    <Compile Include="HttpSocket.cs" />
+    <Compile Include="Interfaces\IHttpSocket.cs" />
+    <Compile Include="Interfaces\IHttpClient.cs" />
+    <Compile Include="Models\HttpRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Native">
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
 </Project>

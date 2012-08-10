@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\Third Party\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.0.12051, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Third Party\nunit.framework.dll</HintPath>
@@ -45,9 +48,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\MattBarton.NETMF.Utilities\HttpClient.cs">
-      <Link>HttpClient.cs</Link>
+      <Link>TargetReferences\HttpClient.cs</Link>
     </Compile>
-    <Compile Include="HttpClientTests\getTest.cs" />
+    <Compile Include="..\MattBarton.NETMF.Utilities\HttpSocket.cs">
+      <Link>TargetReferences\HttpSocket.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Interfaces\IHttpClient.cs">
+      <Link>TargetReferences\IHttpClient.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Interfaces\IHttpSocket.cs">
+      <Link>TargetReferences\IHttpSocket.cs</Link>
+    </Compile>
+    <Compile Include="HttpClientTests\GetTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
