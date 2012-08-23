@@ -47,8 +47,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Adapters\ISocket.cs">
+      <Link>TargetReferences\ISocket.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Adapters\SocketAdapter.cs">
+      <Link>TargetReferences\SocketAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Builders\HttpRequestBuilder.cs">
+      <Link>TargetReferences\HttpRequestBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpSocketConnectionException.cs">
+      <Link>TargetReferences\HttpSocketConnectionException.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpTimeoutException.cs">
+      <Link>TargetReferences\HttpTimeoutException.cs</Link>
+    </Compile>
     <Compile Include="..\MattBarton.NETMF.Utilities\HttpClient.cs">
       <Link>TargetReferences\HttpClient.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\HttpRequest.cs">
+      <Link>TargetReferences\HttpRequest.cs</Link>
     </Compile>
     <Compile Include="..\MattBarton.NETMF.Utilities\HttpSocket.cs">
       <Link>TargetReferences\HttpSocket.cs</Link>
@@ -59,9 +77,20 @@
     <Compile Include="..\MattBarton.NETMF.Utilities\Interfaces\IHttpSocket.cs">
       <Link>TargetReferences\IHttpSocket.cs</Link>
     </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Services\ITimerService.cs">
+      <Link>TargetReferences\ITimerService.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Services\TimerService.cs">
+      <Link>TargetReferences\TimerService.cs</Link>
+    </Compile>
     <Compile Include="HttpClientTests\GetTest.cs" />
+    <Compile Include="HttpRequest Tests\ConstructorTest.cs" />
+    <Compile Include="HttpRequest Tests\ToByteArrayTest.cs" />
+    <Compile Include="HttpSocket Tests\ConnectTest.cs" />
+    <Compile Include="HttpSocket Tests\RequestTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

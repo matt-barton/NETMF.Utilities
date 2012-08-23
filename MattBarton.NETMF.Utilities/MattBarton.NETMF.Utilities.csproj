@@ -30,12 +30,19 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="Adapters\ISocket.cs" />
+    <Compile Include="Adapters\SocketAdapter.cs" />
+    <Compile Include="Builders\HttpRequestBuilder.cs" />
+    <Compile Include="Exceptions\Http\HttpSocketConnectionException.cs" />
+    <Compile Include="Exceptions\Http\HttpTimeoutException.cs" />
     <Compile Include="HttpClient.cs" />
+    <Compile Include="HttpRequest.cs" />
     <Compile Include="HttpSocket.cs" />
     <Compile Include="Interfaces\IHttpSocket.cs" />
     <Compile Include="Interfaces\IHttpClient.cs" />
-    <Compile Include="Models\HttpRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ITimerService.cs" />
+    <Compile Include="Services\TimerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Native">

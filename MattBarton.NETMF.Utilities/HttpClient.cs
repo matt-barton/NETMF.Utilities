@@ -1,5 +1,6 @@
 using System;
 using MattBarton.NETMF.Utilities.Interfaces;
+using MattBarton.NETMF.Utilities.Builders;
 
 namespace MattBarton.NETMF.Utilities
 {
@@ -47,10 +48,18 @@ namespace MattBarton.NETMF.Utilities
 		/// <param name="port"> </param>
 		/// <param name="arguments"></param>
 		/// <returns></returns>
+        /// TODO: Make port number non-manadatory - should default to 80
 		public string Get(string url, int port, string arguments = "")
 		{
-			this.Socket.Connect(url, port);
-			return "";
+            var request = new HttpRequestBuilder()
+                .SetUrl(url)
+                .SetPort(port)
+                .Build();
+                
+            // TODO: think about refactoring Socket.Connect 
+            // to be a part of Socket.Request
+			this.Socket.Connect(request.Hostname, request.Port);
+            return this.Socket.Request(request);
 		}
 
 		/// <summary>
@@ -60,6 +69,7 @@ namespace MattBarton.NETMF.Utilities
 		/// <returns></returns>
 		public string Post (string url)
 		{
+            // TODO: Implement HTTP POST
 			throw new NotImplementedException();
 		}
 
