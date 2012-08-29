@@ -16,7 +16,6 @@ namespace MattBarton.NETMF.Utilities.Adapters
 
         #endregion
 
-
         #region Constructor
 
         public SocketAdapter(AddressFamily addressFamily,

@@ -15,7 +15,7 @@ namespace MattBarton.NETMF.Utilities.Interfaces
 		/// <param name="url">URL for the request</param>
 		/// <param name="arguments">Http argument string</param>
 		/// <returns>Webserver response</returns>
-		string Get (string url, int port, string arguments = "");
+		string Get (string url, string arguments = "", int port = 0);
 
 		/// <summary>
 		/// Perform an http POST

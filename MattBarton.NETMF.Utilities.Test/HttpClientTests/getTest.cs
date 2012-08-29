@@ -22,10 +22,10 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 			var mockSocket = new Mock<IHttpSocket>();
 			var target = new HttpClient(mockSocket.Object);
 			var mockUrl = "www.test.com";
-			var mockPort = 80;
+			var mockPort = 8080;
 
 			// execution
-			target.Get(mockUrl, mockPort);
+			target.Get(mockUrl, "", mockPort);
 
 			// assert
 			mockSocket.Verify(
@@ -33,6 +33,24 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 					It.Is<string>(p => p == mockUrl),
 					It.Is<int>(p => p == mockPort)));
 		}
+
+        [Test]
+        public void Given_host_is_specified_And_port_is_not_specified_When_getting_Then_socket_is_connected_for_host_and_default_port()
+        {
+            // setup
+            var mockSocket = new Mock<IHttpSocket>();
+            var target = new HttpClient(mockSocket.Object);
+            var mockUrl = "www.test.com";
+
+            // execution
+            target.Get(mockUrl);
+
+            // assert
+            mockSocket.Verify(
+                s => s.Connect(
+                    It.Is<string>(p => p == mockUrl),
+                    It.Is<int>(p => p == 80)));
+        }
 
         [Test]
         public void Given_url_is_specified_When_get_Then_socket_is_connected_for_hostname_without_full_path()
@@ -44,7 +62,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var mockPath = mockHostname + "/subdir/resource.html";
 
             // execution
-            target.Get(mockPath, -1);
+            target.Get(mockPath);
 
             // assert
             mockSocket.Verify(
@@ -66,7 +84,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution
-            target.Get(mockUrl, mockPort);
+            target.Get(mockUrl, "", mockPort);
 
             // assertion
             mockSocket.Verify(
@@ -91,7 +109,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution
-            var result = target.Get("", -1);
+            var result = target.Get("");
 
             // assertion
             Assert.AreEqual(mockResponse, result, "Returned response is not correct");

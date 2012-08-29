@@ -9,6 +9,7 @@ using MattBarton.NETMF.Utilities.Builders;
 using MattBarton.NETMF.Utilities.Adapters;
 using MattBarton.NETMF.Utilities.Services;
 using MattBarton.NETMF.Utilities.Exceptions.Http;
+using MattBarton.NETMF.Utilities.Test.Builders;
 
 namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
 {
@@ -19,53 +20,32 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
         public void Given_an_HttpRequest_When_requesting_Then_HttpRequest_byte_array_is_sent_to_socket()
         {
             // setup
-            var mockSocket = new Mock<ISocket>();
-            var calls = 0;
-            mockSocket
-                .Setup(s => s.Available())
-                .Returns(delegate
-                {
-                    calls++;
-                    return calls == 1 ? 1 : 0;
-                });
-            
             var request = new HttpRequestBuilder()
                 .SetUrl("www.test.com/test.html")
                 .SetRequest("the request")
                 .Build();
 
-            var target = new HttpSocket(mockSocket.Object, null);
+            var builder = new HttpSocketBuilder();
+            var target = builder
+                .GivenAnHttpRequest()
+                .Build();
 
             // execution
             target.Request(request);
 
             // assertion
-            mockSocket.Verify(
-                s => s.Send(It.Is<Byte[]>(ba => ba.SequenceEqual(request.ToByteArray()))),
-                Times.Once(),
-                "Request byte array not sent to socket");
+            builder.ThenHttpRequestByteArrayIsSentToSocket(request.ToByteArray());
         }
 
         [Test]
         public void Given_a_request_and_no_socket_data_available_and_timeout_not_reached_When_requesting_Then_method_sleeps()
         {
             // setup
-            var mockSocket = new Mock<ISocket>();
-            var calls = 0;
-            mockSocket
-                .Setup(s => s.Available())
-                .Returns(delegate
-                {
-                    calls++;
-                    return calls == 1 ? 0 : calls == 2 ? 1 : 0;
-                });
+            var builder = new HttpSocketBuilder()
+                .GivenNoSocketDataAvailable()
+                .GivenTimeoutNotReached();
 
-            var mockTimerService = new Mock<ITimerService>();
-            mockTimerService
-                .Setup(ts => ts.TimeoutReached())
-                .Returns(false);
-
-            var target = new HttpSocket(mockSocket.Object, mockTimerService.Object);
+            var target = builder.Build();
 
             // execution
             target.Request(new HttpRequestBuilder()
@@ -73,27 +53,17 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
                 .Build());
 
             // assertion
-            mockTimerService.Verify(
-                ts => ts.Sleep(It.Is<int>(i => i == 100)),
-                Times.AtLeastOnce(),
-                "Method did not sleep");
+            builder.ThenMethodSleeps();
         }
 
         [Test]
         public void Given_a_request_and_no_socket_data_available_and_timeout_reached_When_requesting_Then_exception_thrown()
         {
             // setup
-            var mockSocket = new Mock<ISocket>();
-            mockSocket
-                .Setup(s => s.Available())
-                .Returns(0);
-
-            var mockTimerService = new Mock<ITimerService>();
-            mockTimerService
-                .Setup(ts => ts.TimeoutReached())
-                .Returns(true);
-
-            var target = new HttpSocket(mockSocket.Object, mockTimerService.Object);
+            var target = new HttpSocketBuilder()
+                .GivenNoSocketDataAvailable()
+                .GivenTimeoutReached()
+                .Build();
 
             TestDelegate method = () => target.Request(new HttpRequestBuilder()
                 .SetUrl("www.test.com")
@@ -109,22 +79,10 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
         public void Given_a_request_and_less_than_one_buffers_worth_of_data_available_When_requesting_Then_data_received_once()
         {
             // setup
-            var dataAvailable = (int)Math.Round((double)(HttpSocket.BufferSize / 2));
-            var calls = 0;
-            var mockSocket = new Mock<ISocket>();
-            mockSocket
-                .Setup(s => s.Available())
-                .Returns(delegate
-                {
-                    if (calls > 1)
-                    {
-                        dataAvailable -= HttpSocket.BufferSize;
-                    }
-                    calls += 1;
-                    return dataAvailable < 1 ? 0 : dataAvailable;
-                });
+            var builder = new HttpSocketBuilder()
+                .GivenLessThanOneBuffersWorthOfDataAvailable();
 
-            var target = new HttpSocket(mockSocket.Object, null);
+            var target = builder.Build();
 
             // execution
             target.Request(new HttpRequestBuilder()
@@ -132,32 +90,17 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
                 .Build());
 
             // assertion
-            mockSocket.Verify(
-                s => s.Receive(It.Is<int>(i => i == HttpSocket.BufferSize)),
-                Times.Once(),
-                "Data not received only once");
+            builder.ThenDataReceived(1);
         }
 
         [Test]
         public void Given_a_request_and_two_buffers_worth_of_data_available_When_requesting_Then_data_received_twice()
         {
             // setup
-            var dataAvailable = HttpSocket.BufferSize * 2;
-            var calls = 0;
-            var mockSocket = new Mock<ISocket>();
-            mockSocket
-                .Setup(s => s.Available())
-                .Returns(delegate
-                {
-                    calls += 1;
-                    if (calls > 2)
-                    {
-                        dataAvailable -= HttpSocket.BufferSize;
-                    }
-                    return dataAvailable < 1 ? 0 : dataAvailable;
-                });
+            var builder = new HttpSocketBuilder()
+                .GivenTwoBuffersWorthOfDataAvailable();
 
-            var target = new HttpSocket(mockSocket.Object, null);
+            var target = builder.Build();
 
             // execution
             target.Request(new HttpRequestBuilder()
@@ -165,10 +108,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
                 .Build());
 
             // assertion
-            mockSocket.Verify(
-                s => s.Receive(It.Is<int>(i => i == HttpSocket.BufferSize)),
-                Times.Exactly(2),
-                "Data not received exactly twice");
+            builder.ThenDataReceived(2);
         }
 
         [Test]
@@ -184,52 +124,9 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
                 }
             }
 
-            var mockSocket = new Mock<ISocket>();
-            var calls = 0;
-            mockSocket
-                .Setup(s => s.Available())
-                .Returns(delegate
-                {
-                    calls += 1;
-                    if (calls > 2)
-                    {
-                        var remainder = responseText.Length - ((calls - 2) * HttpSocket.BufferSize);
-                        return remainder > 0 ? remainder : 0;
-                    }
-                    else
-                    {
-                        return responseText.Length;
-                    }
-                });
-
-            var responseBytes = Encoding.UTF8.GetBytes(responseText);
-            var receiveCalls = 0;
-            mockSocket
-                .Setup(s => s.Receive(It.Is<int>(i => i == HttpSocket.BufferSize)))
-                .Returns(delegate
-                {
-                    var returnBytes = new Byte[HttpSocket.BufferSize];
-                    var y = 0;
-                    for (var x = (receiveCalls * HttpSocket.BufferSize); x < ((receiveCalls * HttpSocket.BufferSize) + HttpSocket.BufferSize); x++)
-                    {
-                        if (x == responseBytes.Length)
-                        {
-                            break;
-                        }
-                        returnBytes[y] = responseBytes[x];
-                        y++;
-                    }
-                    if (y < HttpSocket.BufferSize)
-                    {
-                        var trimmedArray = new Byte[y];
-                        trimmedArray = returnBytes.Take(y).ToArray();
-                        returnBytes = trimmedArray;
-                    }
-                    receiveCalls++;
-                    return returnBytes;
-                });
-
-            var target = new HttpSocket(mockSocket.Object, null);
+            var target = new HttpSocketBuilder()
+                .GivenResponseDataReturned(responseText)
+                .Build();
 
             // execution
             var result = target.Request(new HttpRequestBuilder()

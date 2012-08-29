@@ -48,12 +48,17 @@ namespace MattBarton.NETMF.Utilities
 		/// <param name="port"> </param>
 		/// <param name="arguments"></param>
 		/// <returns></returns>
-        /// TODO: Make port number non-manadatory - should default to 80
-		public string Get(string url, int port, string arguments = "")
+        public string Get(string url, string arguments = "", int port = 0)
 		{
-            var request = new HttpRequestBuilder()
-                .SetUrl(url)
-                .SetPort(port)
+            var builder = new HttpRequestBuilder()
+                .SetUrl(url);
+
+            if (port != 0)
+            {
+                builder.SetPort((int)port);
+            }
+
+            var request = builder
                 .Build();
                 
             // TODO: think about refactoring Socket.Connect 

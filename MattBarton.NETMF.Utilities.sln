@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattBarton.NETMF.Utilities.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattBarton.NETMF.Utilities.IntegrationTest", "MattBarton.NETMF.Utilities.IntegrationTest\MattBarton.NETMF.Utilities.IntegrationTest.csproj", "{061EB358-B2FB-4228-9DA7-CF101C5222A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattBarton.UnitTesting", "..\..\Unit Testing\MattBarton.UnitTesting\MattBarton.UnitTesting.csproj", "{8671DD2F-12BB-4F79-8C76-69B33F012085}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{061EB358-B2FB-4228-9DA7-CF101C5222A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{061EB358-B2FB-4228-9DA7-CF101C5222A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{061EB358-B2FB-4228-9DA7-CF101C5222A9}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8671DD2F-12BB-4F79-8C76-69B33F012085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8671DD2F-12BB-4F79-8C76-69B33F012085}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8671DD2F-12BB-4F79-8C76-69B33F012085}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8671DD2F-12BB-4F79-8C76-69B33F012085}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

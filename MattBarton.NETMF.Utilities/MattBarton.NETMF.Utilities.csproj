@@ -30,9 +30,12 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="Adapters\DnsAdapter.cs" />
+    <Compile Include="Adapters\IDns.cs" />
     <Compile Include="Adapters\ISocket.cs" />
     <Compile Include="Adapters\SocketAdapter.cs" />
     <Compile Include="Builders\HttpRequestBuilder.cs" />
+    <Compile Include="Exceptions\Http\HttpUnknownHostException.cs" />
     <Compile Include="Exceptions\Http\HttpSocketConnectionException.cs" />
     <Compile Include="Exceptions\Http\HttpTimeoutException.cs" />
     <Compile Include="HttpClient.cs" />

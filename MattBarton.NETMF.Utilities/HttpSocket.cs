@@ -15,10 +15,13 @@ namespace MattBarton.NETMF.Utilities
 
         private ISocket _socket;
         private ITimerService _timerService;
+        private IDns _dns;
 
         public static int BufferSize = 1024;
 
         #endregion
+
+        #region Properties
 
         private ISocket Socket
         {
@@ -38,6 +41,18 @@ namespace MattBarton.NETMF.Utilities
             }
         }
 
+        private IDns Dns
+        {
+            get
+            {
+                return this._dns;
+            }
+        }
+
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -49,11 +64,14 @@ namespace MattBarton.NETMF.Utilities
         /// Dependency injection
         /// </summary>
         /// <param name="socket"></param>
-        public HttpSocket(ISocket socket, ITimerService timerService)
+        public HttpSocket(ISocket socket, ITimerService timerService, IDns dns)
         {
             this._socket = socket;
             this._timerService = timerService;
+            this._dns = dns;
         }
+
+        #endregion
 
         #region Public Methods
 
@@ -64,18 +82,33 @@ namespace MattBarton.NETMF.Utilities
         /// <param name="port"></param>
         public void Connect (string host, int port)
 		{
-            // TODO: Implement an adapter around System.Net.Dns
-            // to allow the Dns class to be mocked, thereby allowing
-            // unit testing of the case when Dns throws an exception
-            // (ie. when a host is unknown)
-			IPHostEntry hostEntry = Dns.GetHostEntry(host);
+
+            IPHostEntry hostEntry;
+
+            try
+            {
+                if (this.Dns != null)
+                {
+                    // this here for unit testing
+                    hostEntry = this.Dns.GetHostEntry(host);
+                }
+                else
+                {
+                    hostEntry = System.Net.Dns.GetHostEntry(host);
+                }
+            }
+            catch (SocketException e)
+            {
+                throw new HttpUnknownHostException("The host " + host + " could not be found.", e);
+            }
+            
             try
             {
                 this.Socket.Connect(new IPEndPoint(hostEntry.AddressList[0], port));
             }
-            catch (SocketException exp)
+            catch (SocketException e)
             {
-                throw new HttpSocketConnectionException("The socket threw a SocketException", exp);
+                throw new HttpSocketConnectionException("The socket threw a SocketException", e);
             }
         }
 

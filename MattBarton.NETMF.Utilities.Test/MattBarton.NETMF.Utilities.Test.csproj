@@ -47,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Adapters\DnsAdapter.cs">
+      <Link>TargetReferences\DnsAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Adapters\IDns.cs">
+      <Link>TargetReferences\IDns.cs</Link>
+    </Compile>
     <Compile Include="..\MattBarton.NETMF.Utilities\Adapters\ISocket.cs">
       <Link>TargetReferences\ISocket.cs</Link>
     </Compile>
@@ -61,6 +67,9 @@
     </Compile>
     <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpTimeoutException.cs">
       <Link>TargetReferences\HttpTimeoutException.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpUnknownHostException.cs">
+      <Link>TargetReferences\HttpUnknownHostException.cs</Link>
     </Compile>
     <Compile Include="..\MattBarton.NETMF.Utilities\HttpClient.cs">
       <Link>TargetReferences\HttpClient.cs</Link>
@@ -83,6 +92,7 @@
     <Compile Include="..\MattBarton.NETMF.Utilities\Services\TimerService.cs">
       <Link>TargetReferences\TimerService.cs</Link>
     </Compile>
+    <Compile Include="Builders\HttpSocketBuilder.cs" />
     <Compile Include="HttpClientTests\GetTest.cs" />
     <Compile Include="HttpRequest Tests\ConstructorTest.cs" />
     <Compile Include="HttpRequest Tests\ToByteArrayTest.cs" />
@@ -90,7 +100,12 @@
     <Compile Include="HttpSocket Tests\RequestTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Unit Testing\MattBarton.UnitTesting\MattBarton.UnitTesting.csproj">
+      <Project>{8671DD2F-12BB-4F79-8C76-69B33F012085}</Project>
+      <Name>MattBarton.UnitTesting</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

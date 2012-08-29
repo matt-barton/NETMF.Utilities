@@ -8,7 +8,7 @@ namespace MattBarton.NETMF.Utilities.IntegrationTest
         public static void Main()
         {
             Debug.Print(
-                new HttpClient().Get("www.google.co.uk", 80));
+                new HttpClient().Get("www.google.co.uk"));
         }
 
     }
