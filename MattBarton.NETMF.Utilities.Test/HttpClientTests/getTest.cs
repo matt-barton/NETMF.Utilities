@@ -15,62 +15,6 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 	[TestFixture]
 	class GetTest
 	{
-		[Test]
-		public void Given_url_and_port_are_specified_When_get_Then_socket_is_connected_for_hostname_and_port()
-		{
-			// setup
-			var mockSocket = new Mock<IHttpSocket>();
-			var target = new HttpClient(mockSocket.Object);
-			var mockUrl = "www.test.com";
-			var mockPort = 8080;
-
-			// execution
-			target.Get(mockUrl, "", mockPort);
-
-			// assert
-			mockSocket.Verify(
-				s => s.Connect(
-					It.Is<string>(p => p == mockUrl),
-					It.Is<int>(p => p == mockPort)));
-		}
-
-        [Test]
-        public void Given_host_is_specified_And_port_is_not_specified_When_getting_Then_socket_is_connected_for_host_and_default_port()
-        {
-            // setup
-            var mockSocket = new Mock<IHttpSocket>();
-            var target = new HttpClient(mockSocket.Object);
-            var mockUrl = "www.test.com";
-
-            // execution
-            target.Get(mockUrl);
-
-            // assert
-            mockSocket.Verify(
-                s => s.Connect(
-                    It.Is<string>(p => p == mockUrl),
-                    It.Is<int>(p => p == 80)));
-        }
-
-        [Test]
-        public void Given_url_is_specified_When_get_Then_socket_is_connected_for_hostname_without_full_path()
-        {
-            // setup
-            var mockSocket = new Mock<IHttpSocket>();
-            var target = new HttpClient(mockSocket.Object);
-            var mockHostname = "www.test.com";
-            var mockPath = mockHostname + "/subdir/resource.html";
-
-            // execution
-            target.Get(mockPath);
-
-            // assert
-            mockSocket.Verify(
-                s => s.Connect(
-                    It.Is<string>(p => p == mockHostname),
-                    It.IsAny<int>()));
-        }
-
         [Test]
         public void Given_url_and_port_are_set_When_get_Then_request_is_sent_via_socket()
         {

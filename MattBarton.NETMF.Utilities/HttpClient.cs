@@ -60,10 +60,8 @@ namespace MattBarton.NETMF.Utilities
 
             var request = builder
                 .Build();
-                
-            // TODO: think about refactoring Socket.Connect 
-            // to be a part of Socket.Request
-			this.Socket.Connect(request.Hostname, request.Port);
+
+            // TODO: strip out and handle http headers from response
             return this.Socket.Request(request);
 		}
 

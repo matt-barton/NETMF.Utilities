@@ -17,6 +17,73 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
     class RequestTest
     {
         [Test]
+        public void Given_a_host_and_port_are_specified_When_requesting_Then_a_socket_is_connected_to_the_host()
+        {
+            // setup
+            var host = "www.test.com";
+            var port = 8080;
+            var request = new HttpRequestBuilder()
+                .SetUrl(host)
+                .SetPort(port)
+                .Build();
+
+            var builder = new HttpSocketBuilder()
+                .GivenAnHttpRequest();
+
+            var target = builder.Build();
+
+            // execution
+            target.Request(request);
+
+            // assertion
+            builder.ThenSocketConnectedToHostOnPort(host, port);
+        }
+
+        [Test]
+        public void Given_a_SocketException_is_thrown_When_requesting_Then_an_HttpSocketConnectionException_is_thrown()
+        {
+            // setup
+            var target = new HttpSocketBuilder()
+                .GivenAnHttpRequest()
+                .GivenASocketExceptionIsThrown()
+                .Build();
+
+            var request = new HttpRequestBuilder()
+                .SetUrl("")
+                .Build();
+
+            TestDelegate method = () => target.Request(request);
+
+            // execution/assertion
+            var exception = Assert.Throws(typeof(HttpSocketConnectionException), method);
+            Assert.AreEqual("The socket threw a SocketException",
+                exception.Message, "The exception message was not correct");
+        }
+
+        [Test]
+        public void Given_a_host_is_specified_And_the_host_cannot_be_found_When_requesting_Then_an_HttpUnknownHostException_is_thrown()
+        {
+            // setup
+            var host = "mock host";
+            var request = new HttpRequestBuilder()
+                .SetUrl(host)
+                .Build();
+
+            var target = new HttpSocketBuilder()
+                .GivenAnHttpRequest()
+                .GivenAHostIsSpecified(host)
+                .GivenTheHostCannotBeFound()
+                .Build();
+
+            TestDelegate method = () => target.Request(request);
+
+            // execution/assertion
+            var exception = Assert.Throws(typeof(HttpUnknownHostException), method);
+            Assert.AreEqual("The host mock host could not be found.", exception.Message,
+                "The exception message was not correct");
+        }
+
+        [Test]
         public void Given_an_HttpRequest_When_requesting_Then_HttpRequest_byte_array_is_sent_to_socket()
         {
             // setup

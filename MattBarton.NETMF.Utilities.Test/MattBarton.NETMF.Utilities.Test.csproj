@@ -96,7 +96,6 @@
     <Compile Include="HttpClientTests\GetTest.cs" />
     <Compile Include="HttpRequest Tests\ConstructorTest.cs" />
     <Compile Include="HttpRequest Tests\ToByteArrayTest.cs" />
-    <Compile Include="HttpSocket Tests\ConnectTest.cs" />
     <Compile Include="HttpSocket Tests\RequestTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

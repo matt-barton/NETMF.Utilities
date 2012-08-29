@@ -76,49 +76,25 @@ namespace MattBarton.NETMF.Utilities
         #region Public Methods
 
         /// <summary>
-        /// Connect to host over a given port
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="port"></param>
-        public void Connect (string host, int port)
-		{
-
-            IPHostEntry hostEntry;
-
-            try
-            {
-                if (this.Dns != null)
-                {
-                    // this here for unit testing
-                    hostEntry = this.Dns.GetHostEntry(host);
-                }
-                else
-                {
-                    hostEntry = System.Net.Dns.GetHostEntry(host);
-                }
-            }
-            catch (SocketException e)
-            {
-                throw new HttpUnknownHostException("The host " + host + " could not be found.", e);
-            }
-            
-            try
-            {
-                this.Socket.Connect(new IPEndPoint(hostEntry.AddressList[0], port));
-            }
-            catch (SocketException e)
-            {
-                throw new HttpSocketConnectionException("The socket threw a SocketException", e);
-            }
-        }
-
-        /// <summary>
         /// Send a request to the connected host
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         public string Request(HttpRequest request)
         {
+            try
+            {
+                this.Connect(request.Hostname, request.Port);
+            }
+            catch (HttpSocketConnectionException)
+            {
+                throw;
+            }
+            catch (HttpUnknownHostException)
+            {
+                throw;
+            }
+
             this.Socket.Send(request.ToByteArray());
 
             while (this.Socket.Available() < 1)
@@ -141,6 +117,46 @@ namespace MattBarton.NETMF.Utilities
             }
 
             return response;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Connect to host over a given port
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="port"></param>
+        private void Connect(string host, int port)
+        {
+            IPHostEntry hostEntry;
+
+            try
+            {
+                if (this.Dns != null)
+                {
+                    // this here for unit testing
+                    hostEntry = this.Dns.GetHostEntry(host);
+                }
+                else
+                {
+                    hostEntry = System.Net.Dns.GetHostEntry(host);
+                }
+            }
+            catch (SocketException e)
+            {
+                throw new HttpUnknownHostException("The host " + host + " could not be found.", e);
+            }
+
+            try
+            {
+                this.Socket.Connect(new IPEndPoint(hostEntry.AddressList[0], port));
+            }
+            catch (SocketException e)
+            {
+                throw new HttpSocketConnectionException("The socket threw a SocketException", e);
+            }
         }
 
         #endregion
