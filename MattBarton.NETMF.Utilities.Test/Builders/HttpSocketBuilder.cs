@@ -137,50 +137,7 @@ namespace MattBarton.NETMF.Utilities.Test.Builders
 
         public HttpSocketBuilder GivenResponseDataReturned(string responseText)
         {
-            var calls = 0;
-            this._socket
-                .Setup(s => s.Available())
-                .Returns(delegate
-                {
-                    calls += 1;
-                    if (calls > 2)
-                    {
-                        var remainder = responseText.Length - ((calls - 2) * HttpSocket.BufferSize);
-                        return remainder > 0 ? remainder : 0;
-                    }
-                    else
-                    {
-                        return responseText.Length;
-                    }
-                });
-
-            var responseBytes = Encoding.UTF8.GetBytes(responseText);
-            var receiveCalls = 0;
-            this._socket
-                .Setup(s => s.Receive(It.Is<int>(i => i == HttpSocket.BufferSize)))
-                .Returns(delegate
-                {
-                    var returnBytes = new Byte[HttpSocket.BufferSize];
-                    var y = 0;
-                    for (var x = (receiveCalls * HttpSocket.BufferSize); x < ((receiveCalls * HttpSocket.BufferSize) + HttpSocket.BufferSize); x++)
-                    {
-                        if (x == responseBytes.Length)
-                        {
-                            break;
-                        }
-                        returnBytes[y] = responseBytes[x];
-                        y++;
-                    }
-                    if (y < HttpSocket.BufferSize)
-                    {
-                        var trimmedArray = new Byte[y];
-                        trimmedArray = returnBytes.Take(y).ToArray();
-                        returnBytes = trimmedArray;
-                    }
-                    receiveCalls++;
-                    return returnBytes;
-                });
-
+            this.SetResponse(responseText);
             return this;
         }
 
@@ -238,6 +195,57 @@ namespace MattBarton.NETMF.Utilities.Test.Builders
                 Times.Exactly(times),
                 "Data not received exactly " + times + " time(s)");
         }
+        #endregion
+
+        #region Private Methods
+
+        private void SetResponse(string responseText)
+        {
+            var calls = 0;
+            this._socket
+                .Setup(s => s.Available())
+                .Returns(delegate
+                {
+                    calls += 1;
+                    if (calls > 2)
+                    {
+                        var remainder = responseText.Length - ((calls - 2) * HttpSocket.BufferSize);
+                        return remainder > 0 ? remainder : 0;
+                    }
+                    else
+                    {
+                        return responseText.Length;
+                    }
+                });
+
+            var responseBytes = Encoding.UTF8.GetBytes(responseText);
+            var receiveCalls = 0;
+            this._socket
+                .Setup(s => s.Receive(It.Is<int>(i => i == HttpSocket.BufferSize)))
+                .Returns(delegate
+                {
+                    var returnBytes = new Byte[HttpSocket.BufferSize];
+                    var y = 0;
+                    for (var x = (receiveCalls * HttpSocket.BufferSize); x < ((receiveCalls * HttpSocket.BufferSize) + HttpSocket.BufferSize); x++)
+                    {
+                        if (x == responseBytes.Length)
+                        {
+                            break;
+                        }
+                        returnBytes[y] = responseBytes[x];
+                        y++;
+                    }
+                    if (y < HttpSocket.BufferSize)
+                    {
+                        var trimmedArray = new Byte[y];
+                        trimmedArray = returnBytes.Take(y).ToArray();
+                        returnBytes = trimmedArray;
+                    }
+                    receiveCalls++;
+                    return returnBytes;
+                });
+        }
+
         #endregion
     }
 }

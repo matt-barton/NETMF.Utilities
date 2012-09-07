@@ -62,11 +62,29 @@
     <Compile Include="..\MattBarton.NETMF.Utilities\Builders\HttpRequestBuilder.cs">
       <Link>TargetReferences\HttpRequestBuilder.cs</Link>
     </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Data\HttpResponseComponents.cs">
+      <Link>TargetReferences\HttpResponseComponents.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpClientErrorException.cs">
+      <Link>TargetReferences\HttpClientErrorException.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpInvalidResponseException.cs">
+      <Link>TargetReferences\HttpInvalidResponseException.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpServerErrorException.cs">
+      <Link>TargetReferences\HttpServerErrorException.cs</Link>
+    </Compile>
     <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpSocketConnectionException.cs">
       <Link>TargetReferences\HttpSocketConnectionException.cs</Link>
     </Compile>
     <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpTimeoutException.cs">
       <Link>TargetReferences\HttpTimeoutException.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpUnhandledRedirectionException.cs">
+      <Link>TargetReferences\HttpUnhandledRedirectionException.cs</Link>
+    </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpUnhandledStatusException.cs">
+      <Link>TargetReferences\HttpUnhandledStatusException.cs</Link>
     </Compile>
     <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpUnknownHostException.cs">
       <Link>TargetReferences\HttpUnknownHostException.cs</Link>
@@ -92,6 +110,7 @@
     <Compile Include="..\MattBarton.NETMF.Utilities\Services\TimerService.cs">
       <Link>TargetReferences\TimerService.cs</Link>
     </Compile>
+    <Compile Include="Builders\HttpResponseBuilder.cs" />
     <Compile Include="Builders\HttpSocketBuilder.cs" />
     <Compile Include="HttpClientTests\GetTest.cs" />
     <Compile Include="HttpRequest Tests\ConstructorTest.cs" />

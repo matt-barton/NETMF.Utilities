@@ -35,6 +35,12 @@
     <Compile Include="Adapters\ISocket.cs" />
     <Compile Include="Adapters\SocketAdapter.cs" />
     <Compile Include="Builders\HttpRequestBuilder.cs" />
+    <Compile Include="Data\HttpResponseComponents.cs" />
+    <Compile Include="Exceptions\Http\HttpInvalidResponseException.cs" />
+    <Compile Include="Exceptions\Http\HttpServerErrorException.cs" />
+    <Compile Include="Exceptions\Http\HttpClientErrorException.cs" />
+    <Compile Include="Exceptions\Http\HttpUnhandledRedirectionException.cs" />
+    <Compile Include="Exceptions\Http\HttpUnhandledStatusException.cs" />
     <Compile Include="Exceptions\Http\HttpUnknownHostException.cs" />
     <Compile Include="Exceptions\Http\HttpSocketConnectionException.cs" />
     <Compile Include="Exceptions\Http\HttpTimeoutException.cs" />
@@ -51,5 +57,6 @@
     <Reference Include="Microsoft.SPOT.Native">
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.IO" />
   </ItemGroup>
 </Project>

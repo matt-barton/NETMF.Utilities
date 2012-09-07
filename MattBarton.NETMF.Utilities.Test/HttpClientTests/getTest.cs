@@ -6,6 +6,8 @@ using MattBarton.NETMF.Utilities.Interfaces;
 using Moq;
 using NUnit.Framework;
 using System.Net.Sockets;
+using MattBarton.NETMF.Utilities.Test.Builders;
+using MattBarton.NETMF.Utilities.Exceptions.Http;
 
 namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 {
@@ -24,6 +26,14 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var mockUrl = mockHostname + mockPath;
             var mockPort = 8080;
             var mockSocket = new Mock<IHttpSocket>();
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(200)
+                .SetResponse("response")
+                .Build();
+
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
 
             var target = new HttpClient(mockSocket.Object);
 
@@ -41,10 +51,116 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
         }
 
         [Test]
-        public void Given_that_socket_returns_a_response_When_get_Then_response_returned()
+        public void Given_that_http_reponse_is_not_valid_When_getting_Then_HttpInvalidResponseException_thrown()
         {
-            // setup
-            var mockResponse = "Socket response";
+            var mockResponse = "";
+
+            var mockSocket = new Mock<IHttpSocket>();
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
+
+            var target = new HttpClient(mockSocket.Object);
+
+            // execution/assertion
+            TestDelegate testMethod = () => target.Get("");
+            Assert.Throws(typeof(HttpInvalidResponseException), testMethod);
+        }
+
+
+        [Test]
+        public void Given_that_http_status_code_1xx_is_returned_When_getting_Then_HttpUnhandledStatusException_thrown()
+        {
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(100)
+                .SetResponse("Some response")
+                .Build();
+
+            var mockSocket = new Mock<IHttpSocket>();
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
+
+            var target = new HttpClient(mockSocket.Object);
+
+            // execution/assertion
+            TestDelegate testMethod = () => target.Get("");
+            Assert.Throws(typeof(HttpUnhandledStatusException), testMethod);
+        }
+
+        [Test]
+        public void Given_that_http_status_code_3xx_is_returned_When_getting_Then_HttpUnhandledRedirectionException_thrown()
+        {
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(301)
+                .SetStatusDescriptor("Moved Permanently")
+                .SetResponse("Some response")
+                .Build();
+
+            var mockSocket = new Mock<IHttpSocket>();
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
+
+            var target = new HttpClient(mockSocket.Object);
+
+            // execution/assertion
+            TestDelegate testMethod = () => target.Get("");
+            Assert.Throws(typeof(HttpUnhandledRedirectionException), testMethod);
+        }
+
+        [Test]
+        public void Given_that_http_status_code_4xx_is_returned_When_getting_Then_HttpClientErrorException_thrown()
+        {
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(404)
+                .SetStatusDescriptor("Not Found")
+                .SetResponse("Some response")
+                .Build();
+
+            var mockSocket = new Mock<IHttpSocket>();
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
+
+            var target = new HttpClient(mockSocket.Object);
+
+            // execution/assertion
+            TestDelegate testMethod = () => target.Get("");
+            Assert.Throws(typeof(HttpClientErrorException), testMethod);
+        }
+
+        [Test]
+        public void Given_that_http_status_code_5xx_is_returned_When_getting_Then_HttpServerErrorException_thrown()
+        {
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(500)
+                .SetStatusDescriptor("Server Error")
+                .SetResponse("Some response")
+                .Build();
+
+            var mockSocket = new Mock<IHttpSocket>();
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
+
+            var target = new HttpClient(mockSocket.Object);
+
+            // execution/assertion
+            TestDelegate testMethod = () => target.Get("");
+            Assert.Throws(typeof(HttpServerErrorException), testMethod);
+        }
+
+        [Test]
+        public void Given_that_http_status_code_2xx_is_returned_When_getting_Then_response_is_returned()
+        {
+            var content = "some response content";
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(200)
+                .SetStatusDescriptor("OK")
+                .SetResponse(content)
+                .Build();
+
             var mockSocket = new Mock<IHttpSocket>();
             mockSocket
                 .Setup(s => s.Request(It.IsAny<HttpRequest>()))
@@ -56,7 +172,33 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var result = target.Get("");
 
             // assertion
-            Assert.AreEqual(mockResponse, result, "Returned response is not correct");
+            Assert.AreEqual(content, result, "The http reponse was not correct");
         }
-	}
+
+        [Test]
+        public void Given_that_http_status_code_2xx_And_http_headers_are_returned_When_getting_Then_response_is_returned()
+        {
+            var content = "some response content";
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(200)
+                .SetStatusDescriptor("OK")
+                .SetResponse(content)
+                .AddHeader("Header-one: header stuff")
+                .AddHeader("Second-header: more header stuff")
+                .Build();
+
+            var mockSocket = new Mock<IHttpSocket>();
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
+
+            var target = new HttpClient(mockSocket.Object);
+
+            // execution
+            var result = target.Get("");
+
+            // assertion
+            Assert.AreEqual(content, result, "The http reponse was not correct");
+        }
+    }
 }

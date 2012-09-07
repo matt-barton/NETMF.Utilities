@@ -178,6 +178,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
             builder.ThenDataReceived(2);
         }
 
+        /*
         [Test]
         public void Given_a_request_and_response_data_returned_When_requesting_Then_response_returned_as_string()
         {
@@ -203,5 +204,6 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
             // assertion
             Assert.AreEqual(responseText, result, "Result was not correct");
         }
+        */
     }
 }

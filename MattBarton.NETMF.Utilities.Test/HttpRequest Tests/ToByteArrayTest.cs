@@ -31,7 +31,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             assembledRequest.Append(" ");
             assembledRequest.Append(path);
             assembledRequest.Append(" ");
-            assembledRequest.Append("HTTP/1.1\n");
+            assembledRequest.Append("HTTP/1.0\n");
             assembledRequest.Append("Host: ");
             assembledRequest.Append(hostname);
             assembledRequest.Append("\n\n");

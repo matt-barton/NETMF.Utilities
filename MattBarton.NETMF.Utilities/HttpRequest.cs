@@ -101,7 +101,7 @@ namespace MattBarton.NETMF.Utilities
 
         private string BuildFullRequest()
         {
-            var fullRequest = this._method + " " + this._path + " HTTP/1.1\n";
+            var fullRequest = this._method + " " + this._path + " HTTP/1.0\n";
             fullRequest += "Host: " + this._hostname + "\n\n";
             fullRequest += this._request;
             return fullRequest;
