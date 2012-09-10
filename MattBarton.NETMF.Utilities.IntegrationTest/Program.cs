@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using MattBarton.NETMF.Utilities.Builders;
 
 namespace MattBarton.NETMF.Utilities.IntegrationTest
 {
@@ -9,6 +10,9 @@ namespace MattBarton.NETMF.Utilities.IntegrationTest
         {
             string response;
             string url = "mattbarton.org/netmf_utilities_http_get_test.txt";
+            HttpRequest request = new HttpRequestBuilder()
+                .SetUrl(url)
+                .Build();
 
             Debug.Print("* -------------------------------");
             Debug.Print("* IntegrationTest");
@@ -18,7 +22,7 @@ namespace MattBarton.NETMF.Utilities.IntegrationTest
             Debug.Print("");
             try
             {
-                response = new HttpClient().Get(url);
+                response = new HttpClient().Get(request);
             }
             catch (Exception ex)
             {

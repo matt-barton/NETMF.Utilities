@@ -8,6 +8,7 @@ using NUnit.Framework;
 using System.Net.Sockets;
 using MattBarton.NETMF.Utilities.Test.Builders;
 using MattBarton.NETMF.Utilities.Exceptions.Http;
+using MattBarton.NETMF.Utilities.Builders;
 
 namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 {
@@ -18,7 +19,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 	class GetTest
 	{
         [Test]
-        public void Given_url_and_port_are_set_When_get_Then_request_is_sent_via_socket()
+        public void Given_url_and_port_and_arguments_are_set_When_get_Then_request_is_sent_via_socket()
         {
             // setup
             var mockHostname = "www.test.com";
@@ -26,6 +27,12 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var mockUrl = mockHostname + mockPath;
             var mockPort = 8080;
             var mockSocket = new Mock<IHttpSocket>();
+
+            var mockRequest = new HttpRequestBuilder()
+                .SetUrl(mockUrl)
+                .SetPort(mockPort)
+                .Build();
+
             var mockResponse = new HttpResponseBuilder()
                 .SetStatusCode(200)
                 .SetResponse("response")
@@ -38,14 +45,15 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution
-            target.Get(mockUrl, "", mockPort);
+            target.Get(mockRequest);
 
             // assertion
             mockSocket.Verify(
                 s => s.Request(It.Is<HttpRequest>(
                     hr => hr.Hostname == mockHostname &&
                         hr.Path == mockPath &&
-                        hr.Port == mockPort)),
+                        hr.Port == mockPort &&
+                        hr.Method == "GET")),
                 Times.Once(),
                 "Request not sent via socket");
         }
@@ -63,7 +71,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution/assertion
-            TestDelegate testMethod = () => target.Get("");
+            TestDelegate testMethod = () => target.Get(new HttpRequest(""));
             Assert.Throws(typeof(HttpInvalidResponseException), testMethod);
         }
 
@@ -84,7 +92,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution/assertion
-            TestDelegate testMethod = () => target.Get("");
+            TestDelegate testMethod = () => target.Get(new HttpRequest(""));
             Assert.Throws(typeof(HttpUnhandledStatusException), testMethod);
         }
 
@@ -105,7 +113,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution/assertion
-            TestDelegate testMethod = () => target.Get("");
+            TestDelegate testMethod = () => target.Get(new HttpRequest(""));
             Assert.Throws(typeof(HttpUnhandledRedirectionException), testMethod);
         }
 
@@ -126,7 +134,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution/assertion
-            TestDelegate testMethod = () => target.Get("");
+            TestDelegate testMethod = () => target.Get(new HttpRequest(""));
             Assert.Throws(typeof(HttpClientErrorException), testMethod);
         }
 
@@ -147,7 +155,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution/assertion
-            TestDelegate testMethod = () => target.Get("");
+            TestDelegate testMethod = () => target.Get(new HttpRequest(""));
             Assert.Throws(typeof(HttpServerErrorException), testMethod);
         }
 
@@ -169,7 +177,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution
-            var result = target.Get("");
+            var result = target.Get(new HttpRequest(""));
 
             // assertion
             Assert.AreEqual(content, result, "The http reponse was not correct");
@@ -195,7 +203,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             var target = new HttpClient(mockSocket.Object);
 
             // execution
-            var result = target.Get("");
+            var result = target.Get(new HttpRequest(""));
 
             // assertion
             Assert.AreEqual(content, result, "The http reponse was not correct");

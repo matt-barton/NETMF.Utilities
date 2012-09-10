@@ -16,7 +16,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             var mockMethod = "METHOD";
 
             // execution
-            var result = new HttpRequest(mockMethod, "", -1, "");
+            var result = new HttpRequest("", mockMethod, -1);
 
             // assertion
             Assert.AreEqual(mockMethod, result.Method, "Method is not correct");
@@ -29,7 +29,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             var mockUrl = "www.test.com/subdir/resource.html";
             
             // execution
-            var result = new HttpRequest("", mockUrl, -1, "");
+            var result = new HttpRequest(mockUrl, "", -1);
 
             // assertion
             Assert.AreEqual("www.test.com", result.Hostname, "Hostname is not correct");
@@ -42,7 +42,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             var mockUrl = "www.test.com/subdir/resource.html";
 
             // execution
-            var result = new HttpRequest("", mockUrl, -1, "");
+            var result = new HttpRequest(mockUrl, "", -1);
 
             // assertion
             Assert.AreEqual("/subdir/resource.html", result.Path, "Path is not correct");
@@ -56,7 +56,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             var mockUrl = "test@test.com/";
 
             // execution
-            var result = new HttpRequest("", mockUrl, mockPort, "");
+            var result = new HttpRequest(mockUrl, "", mockPort);
 
             // assertion
             Assert.AreEqual(mockPort, result.Port, "Port is not correct");

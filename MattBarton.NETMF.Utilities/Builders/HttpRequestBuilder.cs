@@ -6,10 +6,9 @@ namespace MattBarton.NETMF.Utilities.Builders
     {
         #region Fields
 
-        private string _method = "GET";
+        private string _method;
         private string _url;
-        private int _port = 80;
-        private string _request;
+        private int _port = 0;
 
         #endregion
 
@@ -17,7 +16,7 @@ namespace MattBarton.NETMF.Utilities.Builders
 
         public HttpRequest Build()
         {
-            return new HttpRequest(this._method, this._url, this._port, this._request);
+            return new HttpRequest(this._url, this._method, this._port);
         }
 
         public HttpRequestBuilder SetUrl(string url)
@@ -35,12 +34,6 @@ namespace MattBarton.NETMF.Utilities.Builders
         public HttpRequestBuilder SetMethod(string method)
         {
             this._method = method;
-            return this;
-        }
-
-        public HttpRequestBuilder SetRequest(string request)
-        {
-            this._request = request;
             return this;
         }
 

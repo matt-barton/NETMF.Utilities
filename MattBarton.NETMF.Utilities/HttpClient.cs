@@ -12,7 +12,9 @@ namespace MattBarton.NETMF.Utilities
 	{
 		private IHttpSocket _socket;
 
-		/// <summary>
+        #region Properties
+
+        /// <summary>
 		/// Proxy for an HttpSocket object
 		/// </summary>
 		private IHttpSocket Socket
@@ -24,8 +26,10 @@ namespace MattBarton.NETMF.Utilities
 			}
 		}
 
-		#region Constructors
-		/// <summary>
+        #endregion
+
+        #region Constructors
+        /// <summary>
 		/// Initialise a new instance
 		/// </summary>
 		public HttpClient ()
@@ -52,20 +56,8 @@ namespace MattBarton.NETMF.Utilities
 		/// <param name="port"> </param>
 		/// <param name="arguments"></param>
 		/// <returns></returns>
-        public string Get(string url, string arguments = "", int port = 0)
+        public string Get(HttpRequest request)
 		{
-            var builder = new HttpRequestBuilder()
-                .SetUrl(url);
-
-            if (port != 0)
-            {
-                builder.SetPort((int)port);
-            }
-
-            var request = builder
-                .Build();
-
-            // TODO: strip out and handle http headers from response
             var response = this.Socket.Request(request);
             var content = ExtractContent(response);
             return content;
@@ -76,7 +68,7 @@ namespace MattBarton.NETMF.Utilities
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		public string Post (string url)
+		public string Post (HttpRequest request)
 		{
             // TODO: Implement HTTP POST
 			throw new NotImplementedException();

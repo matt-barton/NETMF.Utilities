@@ -12,17 +12,16 @@ namespace MattBarton.NETMF.Utilities.Interfaces
 		/// <summary>
 		/// Perform an http GET
 		/// </summary>
-		/// <param name="url">URL for the request</param>
-		/// <param name="arguments">Http argument string</param>
+		/// <param name="request">Represents the details of the request</param>
 		/// <returns>Webserver response</returns>
-		string Get (string url, string arguments = "", int port = 0);
+		string Get (HttpRequest request);
 
 		/// <summary>
 		/// Perform an http POST
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		string Post (string url);
+		string Post (HttpRequest request);
 
 		#endregion
 	}

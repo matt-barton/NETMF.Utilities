@@ -19,9 +19,8 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             var path = "/test.php";
             var url = hostname + path;
             var port = 8081;
-            var request = "this is the request";
 
-            var target = new HttpRequest(method, url, port, request);
+            var target = new HttpRequest(url, method, port);
 
             // execution
             var result = target.ToByteArray();
@@ -34,8 +33,8 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             assembledRequest.Append("HTTP/1.0\n");
             assembledRequest.Append("Host: ");
             assembledRequest.Append(hostname);
+            assembledRequest.Append("\nConnection: Close");
             assembledRequest.Append("\n\n");
-            assembledRequest.Append(request);
 
             // assertion
             Assert.AreEqual(

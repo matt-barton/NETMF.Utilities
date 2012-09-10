@@ -89,7 +89,6 @@ namespace MattBarton.NETMF.Utilities.Test.HttpSocket_Tests
             // setup
             var request = new HttpRequestBuilder()
                 .SetUrl("www.test.com/test.html")
-                .SetRequest("the request")
                 .Build();
 
             var builder = new HttpSocketBuilder();
