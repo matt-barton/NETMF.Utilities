@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.SPOT;
 using MattBarton.NETMF.Utilities.Builders;
+using MattBarton.NETMF.Utilities.Enumerations;
 
 namespace MattBarton.NETMF.Utilities.IntegrationTest
 {
@@ -22,6 +23,8 @@ namespace MattBarton.NETMF.Utilities.IntegrationTest
             Debug.Print("");
             try
             {
+                var test = HttpMethod.POST;
+                var asdf = test.ToString();
                 response = new HttpClient().Send(request);
             }
             catch (Exception ex)

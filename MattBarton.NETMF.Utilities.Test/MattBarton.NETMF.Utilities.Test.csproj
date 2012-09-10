@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MattBarton.UnitTesting, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libraries\MattBarton.UnitTesting.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\Third Party\Moq.dll</HintPath>
     </Reference>
@@ -126,10 +130,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Unit Testing\MattBarton.UnitTesting\MattBarton.UnitTesting.csproj">
-      <Project>{8671DD2F-12BB-4F79-8C76-69B33F012085}</Project>
-      <Name>MattBarton.UnitTesting</Name>
-    </ProjectReference>
+    <Content Include="Libraries\MattBarton.UnitTesting.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

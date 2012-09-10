@@ -152,7 +152,19 @@ namespace MattBarton.NETMF.Utilities
 
         private string BuildInitialLine()
         {
-            var initialLine = this._method.ToString() + " " + this._path;
+            var method = "";
+            switch (this._method)
+            {
+                case HttpMethod.POST:
+                    method = "POST";
+                    break;
+
+                case HttpMethod.GET:
+                    method = "GET";
+                    break;
+            }
+
+            var initialLine = method + " " + this._path;
 
             if (this.Method == HttpMethod.GET)
             {
