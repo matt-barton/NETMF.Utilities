@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using MattBarton.NETMF.Utilities.Services;
+using MattBarton.NETMF.Utilities.Enumerations;
 
 namespace MattBarton.NETMF.Utilities
 {
@@ -8,19 +9,20 @@ namespace MattBarton.NETMF.Utilities
     {
         #region Fields
 
-        private string _method = "GET";
+        private HttpMethod _method;
         private string _hostname;
         private string _path;
         private int _port = 80;
         private int _numberOfArguments = 0;
         private string[] _argumentNames = new string[] { };
         private string[] _argumentValues = new string[] { };
+        private string _body = "";
 
         #endregion
 
         #region Properties
 
-        public string Method
+        public HttpMethod Method
         {
             get
             {
@@ -56,10 +58,10 @@ namespace MattBarton.NETMF.Utilities
 
         #region Constructors
 
-        public HttpRequest(string url, string method = null, int port = 0)
+        public HttpRequest(string url, HttpMethod method = HttpMethod.GET, int port = 0)
         {
             this.GetHostnameAndPathFromUrl(url);
-            this._method = method != null ? method : this._method;
+            this._method = method;
             this._port = port != 0 ? port : this._port;
         }
 
@@ -113,35 +115,68 @@ namespace MattBarton.NETMF.Utilities
 
         private string BuildFullRequest()
         {
+            if (this._method == HttpMethod.POST)
+            {
+                this.BuildPostSpecificDetails();
+            }
+
             var fullRequest = this.BuildInitialLine();
-            fullRequest += this.BuildStandardHeaders();
-            fullRequest += "\n";
+            fullRequest += this.BuildHeaders();
+            fullRequest += "\n\n";
+
+            if (this._method == HttpMethod.POST)
+            {
+                fullRequest += this._body;
+            }
             return fullRequest;
         }
 
-        private string BuildStandardHeaders()
+        private void BuildPostSpecificDetails()
         {
-            return "Host: " + this._hostname + "\n"
-                + "Connection: Close\n";
+            this._body = this.ArgumentsToString();
         }
+
+        private string BuildHeaders()
+        {
+            var headers = "Host: " + this._hostname;
+            headers += "\nConnection: Close";
+
+            if (this._method == HttpMethod.POST)
+            {
+                headers += "\nContent-Type: application/x-www-form-urlencoded";
+                headers += "\nContent-Length: " + this._body.Length;
+            }
+
+            return headers;
+        }
+
         private string BuildInitialLine()
         {
-            var initialLine = this._method + " " + this._path;
-            for (var x = 0; x < this._argumentNames.Length; x++)
-            {
-                if (x == 0)
-                {
-                    initialLine += "?";
-                }
-                else
-                {
-                    initialLine += "&";
-                }
+            var initialLine = this._method.ToString() + " " + this._path;
 
-                initialLine += this._argumentNames[x] + "=" + this._argumentValues[x];
+            if (this.Method == HttpMethod.GET)
+            {
+                var arguments = this.ArgumentsToString();
+                initialLine += arguments.Length > 0 ? "?" + arguments : "";
             }
+
             initialLine += " HTTP/1.0\n";
             return initialLine;
+        }
+
+        private string ArgumentsToString()
+        {
+            var output = "";
+            for (var x = 0; x < this._argumentNames.Length; x++)
+            {
+                if (x > 0)
+                {
+                    output += "&";
+                }
+
+                output += this._argumentNames[x] + "=" + this._argumentValues[x];
+            }
+            return output;
         }
         #endregion
     }

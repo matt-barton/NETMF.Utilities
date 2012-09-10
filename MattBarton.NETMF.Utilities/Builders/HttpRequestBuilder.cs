@@ -1,4 +1,5 @@
 using System;
+using MattBarton.NETMF.Utilities.Enumerations;
 
 namespace MattBarton.NETMF.Utilities.Builders
 {
@@ -6,7 +7,7 @@ namespace MattBarton.NETMF.Utilities.Builders
     {
         #region Fields
 
-        private string _method;
+        private HttpMethod _method = HttpMethod.GET;
         private string _url;
         private int _port = 0;
 
@@ -31,7 +32,7 @@ namespace MattBarton.NETMF.Utilities.Builders
             return this;
         }
 
-        public HttpRequestBuilder SetMethod(string method)
+        public HttpRequestBuilder SetMethod(HttpMethod method)
         {
             this._method = method;
             return this;

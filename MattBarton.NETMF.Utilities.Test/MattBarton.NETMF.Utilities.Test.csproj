@@ -65,6 +65,9 @@
     <Compile Include="..\MattBarton.NETMF.Utilities\Data\HttpResponseComponents.cs">
       <Link>TargetReferences\HttpResponseComponents.cs</Link>
     </Compile>
+    <Compile Include="..\MattBarton.NETMF.Utilities\Enumerations\HttpMethod.cs">
+      <Link>TargetReferences\HttpMethod.cs</Link>
+    </Compile>
     <Compile Include="..\MattBarton.NETMF.Utilities\Exceptions\Http\HttpClientErrorException.cs">
       <Link>TargetReferences\HttpClientErrorException.cs</Link>
     </Compile>
@@ -115,7 +118,7 @@
     </Compile>
     <Compile Include="Builders\HttpResponseBuilder.cs" />
     <Compile Include="Builders\HttpSocketBuilder.cs" />
-    <Compile Include="HttpClientTests\GetTest.cs" />
+    <Compile Include="HttpClientTests\SendTest.cs" />
     <Compile Include="HttpRequest Tests\ConstructorTest.cs" />
     <Compile Include="HttpRequest Tests\AddArgumentTest.cs" />
     <Compile Include="HttpRequest Tests\ToByteArrayTest.cs" />

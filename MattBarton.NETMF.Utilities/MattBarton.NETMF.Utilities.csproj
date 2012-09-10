@@ -36,6 +36,7 @@
     <Compile Include="Adapters\SocketAdapter.cs" />
     <Compile Include="Builders\HttpRequestBuilder.cs" />
     <Compile Include="Data\HttpResponseComponents.cs" />
+    <Compile Include="Enumerations\HttpMethod.cs" />
     <Compile Include="Exceptions\Http\HttpInvalidResponseException.cs" />
     <Compile Include="Exceptions\Http\HttpServerErrorException.cs" />
     <Compile Include="Exceptions\Http\HttpClientErrorException.cs" />

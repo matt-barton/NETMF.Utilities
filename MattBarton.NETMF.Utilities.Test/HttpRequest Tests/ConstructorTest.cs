@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using MattBarton.NETMF.Utilities.Enumerations;
 
 namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
 {
@@ -13,7 +14,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
         public void Given_method_is_specified_When_constructing_The_Method_is_set()
         {
             // setup
-            var mockMethod = "METHOD";
+            var mockMethod = HttpMethod.POST;
 
             // execution
             var result = new HttpRequest("", mockMethod, -1);
@@ -29,7 +30,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             var mockUrl = "www.test.com/subdir/resource.html";
             
             // execution
-            var result = new HttpRequest(mockUrl, "", -1);
+            var result = new HttpRequest(mockUrl);
 
             // assertion
             Assert.AreEqual("www.test.com", result.Hostname, "Hostname is not correct");
@@ -42,7 +43,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             var mockUrl = "www.test.com/subdir/resource.html";
 
             // execution
-            var result = new HttpRequest(mockUrl, "", -1);
+            var result = new HttpRequest(mockUrl);
 
             // assertion
             Assert.AreEqual("/subdir/resource.html", result.Path, "Path is not correct");
@@ -56,7 +57,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             var mockUrl = "test@test.com/";
 
             // execution
-            var result = new HttpRequest(mockUrl, "", mockPort);
+            var result = new HttpRequest(mockUrl, HttpMethod.POST, mockPort);
 
             // assertion
             Assert.AreEqual(mockPort, result.Port, "Port is not correct");

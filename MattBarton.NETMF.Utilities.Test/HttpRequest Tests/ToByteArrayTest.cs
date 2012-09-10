@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using MattBarton.NETMF.Utilities.Builders;
+using MattBarton.NETMF.Utilities.Enumerations;
 
 namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
 {
@@ -20,7 +21,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             var url = hostname + path;
             var port = 8081;
 
-            var target = new HttpRequest(url, method, port);
+            var target = new HttpRequest(url, HttpMethod.GET, port);
 
             // execution
             var result = target.ToByteArray();
@@ -30,11 +31,9 @@ namespace MattBarton.NETMF.Utilities.Test.HttpRequest_Tests
             assembledRequest.Append(" ");
             assembledRequest.Append(path);
             assembledRequest.Append(" ");
-            assembledRequest.Append("HTTP/1.0\n");
-            assembledRequest.Append("Host: ");
+            assembledRequest.Append("HTTP/1.0\nHost: ");
             assembledRequest.Append(hostname);
-            assembledRequest.Append("\nConnection: Close");
-            assembledRequest.Append("\n\n");
+            assembledRequest.Append("\nConnection: Close\n\n");
 
             // assertion
             Assert.AreEqual(

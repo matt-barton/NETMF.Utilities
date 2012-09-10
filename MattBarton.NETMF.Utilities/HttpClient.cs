@@ -56,23 +56,12 @@ namespace MattBarton.NETMF.Utilities
 		/// <param name="port"> </param>
 		/// <param name="arguments"></param>
 		/// <returns></returns>
-        public string Get(HttpRequest request)
-		{
+        public string Send(HttpRequest request)
+        {
             var response = this.Socket.Request(request);
             var content = ExtractContent(response);
             return content;
-		}
-
-		/// <summary>
-		/// Perform a POST request
-		/// </summary>
-		/// <param name="url"></param>
-		/// <returns></returns>
-		public string Post (HttpRequest request)
-		{
-            // TODO: Implement HTTP POST
-			throw new NotImplementedException();
-		}
+        }
 
 		#endregion
 

@@ -22,7 +22,7 @@ namespace MattBarton.NETMF.Utilities.IntegrationTest
             Debug.Print("");
             try
             {
-                response = new HttpClient().Get(request);
+                response = new HttpClient().Send(request);
             }
             catch (Exception ex)
             {
