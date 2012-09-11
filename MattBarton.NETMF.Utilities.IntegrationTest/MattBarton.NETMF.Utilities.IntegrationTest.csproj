@@ -55,4 +55,9 @@
       <Name>MattBarton.NETMF.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Remote Files\netmf_utilities_http_post_test.php" />
+    <None Include="Remote Files\netmf_utilities_http_get_test.php" />
+  </ItemGroup>
 </Project>

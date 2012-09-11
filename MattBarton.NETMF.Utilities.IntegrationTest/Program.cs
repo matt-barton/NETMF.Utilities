@@ -10,28 +10,53 @@ namespace MattBarton.NETMF.Utilities.IntegrationTest
         public static void Main()
         {
             string response;
-            string url = "mattbarton.org/netmf_utilities_http_get_test.txt";
-            HttpRequest request = new HttpRequestBuilder()
-                .SetUrl(url)
-                .Build();
 
             Debug.Print("* -------------------------------");
             Debug.Print("* IntegrationTest");
             Debug.Print("* -------------------------------");
             Debug.Print("");
-            Debug.Print("Getting " + url);
+
+            string getUrl = "mattbarton.org/netmf_utilities_http_get_test.php";
+            HttpRequest getRequest = new HttpRequestBuilder()
+                .SetUrl(getUrl)
+                .Build();
+
+            getRequest.AddArgument("arg1", "value1");
+            getRequest.AddArgument("color", "yellow");
+
+            Debug.Print("Getting " + getUrl);
             Debug.Print("");
             try
             {
-                var test = HttpMethod.POST;
-                var asdf = test.ToString();
-                response = new HttpClient().Send(request);
+                response = new HttpClient().Send(getRequest);
             }
             catch (Exception ex)
             {
                 response = ex.Message;
             }
+            Debug.Print(response);
+            Debug.Print("");
 
+
+            string postUrl = "mattbarton.org/netmf_utilities_http_post_test.php";
+            HttpRequest postRequest = new HttpRequestBuilder()
+                .SetUrl(postUrl)
+                .SetMethod(HttpMethod.POST)
+                .Build();
+
+            postRequest.AddArgument("arg1", "value1");
+            postRequest.AddArgument("color", "yellow");
+
+            Debug.Print("Posting to " + postUrl);
+            Debug.Print("");
+            try
+            {
+                response = new HttpClient().Send(postRequest);
+            }
+            catch (Exception ex)
+            {
+                response = ex.Message;
+            }
             Debug.Print(response);
             Debug.Print("");
             Debug.Print("* -------------------------------");
