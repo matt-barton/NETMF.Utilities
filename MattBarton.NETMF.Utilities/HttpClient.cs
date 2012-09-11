@@ -59,22 +59,17 @@ namespace MattBarton.NETMF.Utilities
         public string Send(HttpRequest request)
         {
             var response = this.Socket.Request(request);
-            var content = ExtractContent(response);
-            return content;
+            var httpResponseComponents = ExtractComponents(response);
+            request.SetStatusCode(httpResponseComponents.StatusCode);
+            CheckStatus(httpResponseComponents.StatusCode, httpResponseComponents.StatusDescriptor, request);
+            return httpResponseComponents.Content;
         }
 
 		#endregion
 
         #region Private Methods 
 
-        private string ExtractContent(string httpResponse)
-        {
-            var httpResponseComponents = ExtractComponents(httpResponse);
-            CheckStatus(httpResponseComponents.StatusCode);
-            return httpResponseComponents.Content;
-        }
-
-        private static void CheckStatus(int statusCode)
+        private static void CheckStatus(int statusCode, string statusDescriptor, HttpRequest request)
         {
             var statusCategory = statusCode.ToString().ToCharArray()[0];
 
@@ -87,27 +82,19 @@ namespace MattBarton.NETMF.Utilities
                 switch (statusCategory)
                 {
                     case '1':
-                        throw new HttpUnhandledStatusException(
-                            "The server responded with the continuation status code "
-                            + statusCode + " which I cannot deal with");
+                        throw new HttpRequestException(statusCode + " " + statusDescriptor, request);
                         break;
 
                     case '3':
-                        throw new HttpUnhandledRedirectionException(
-                            "The server responded with the redirectionstatus code "
-                            + statusCode + " which I cannot deal with");
+                        throw new HttpRequestException(statusCode + " " + statusDescriptor, request);
                         break;
 
                     case '4':
-                        throw new HttpClientErrorException(
-                            "The server responded with the client error code "
-                            + statusCode + ".  You did something wrong.");
+                        throw new HttpRequestException(statusCode + " " + statusDescriptor, request);
                         break;
 
                     case '5':
-                        throw new HttpServerErrorException(
-                            "The server responded with the error code "
-                            + statusCode + ".  Something went wrong which you have no control over.");
+                        throw new HttpRequestException(statusCode + " " + statusDescriptor, request);
                         break;
 
                     default:
@@ -181,12 +168,35 @@ namespace MattBarton.NETMF.Utilities
             {
                 throw new HttpInvalidResponseException("Invalid status line \"" + statusLine + "\"");
             }
-            int statusCode = Int32.Parse(statusComponents[1]);
+
+            int statusCode = 0;
+            string statusDescriptor = "";
+
+            for (var x = 0; x < statusComponents.Length; x++)
+            {
+                var component = statusComponents[x].Trim();
+                if (x > 0)
+                {
+                    if (x == 1)
+                    {
+                        statusCode = Int32.Parse(component);
+                    }
+                    else
+                    {
+                        if (x > 2)
+                        {
+                            statusDescriptor += " ";
+                        }
+                        statusDescriptor += component;
+                    }
+                }
+            }
 
             return new HttpResponseComponents
             {
                 Headers = headers,
                 StatusCode = statusCode,
+                StatusDescriptor = statusDescriptor,
                 Content = response
             };
         }

@@ -82,6 +82,7 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
         {
             var mockResponse = new HttpResponseBuilder()
                 .SetStatusCode(100)
+                .SetStatusDescriptor("Redirection")
                 .SetResponse("Some response")
                 .Build();
 
@@ -94,7 +95,8 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 
             // execution/assertion
             TestDelegate testMethod = () => target.Send(new HttpRequest(""));
-            Assert.Throws(typeof(HttpUnhandledStatusException), testMethod);
+            var exception = Assert.Throws(typeof(HttpRequestException), testMethod);
+            Assert.AreEqual("100 Redirection", exception.Message, "Exception message is not correct");
         }
 
         [Test]
@@ -115,7 +117,8 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 
             // execution/assertion
             TestDelegate testMethod = () => target.Send(new HttpRequest(""));
-            Assert.Throws(typeof(HttpUnhandledRedirectionException), testMethod);
+            var exception = Assert.Throws(typeof(HttpRequestException), testMethod);
+            Assert.AreEqual("301 Moved Permanently", exception.Message, "Exception message was not correct");
         }
 
         [Test]
@@ -136,7 +139,8 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 
             // execution/assertion
             TestDelegate testMethod = () => target.Send(new HttpRequest(""));
-            Assert.Throws(typeof(HttpClientErrorException), testMethod);
+            var exception = Assert.Throws(typeof(HttpRequestException), testMethod);
+            Assert.AreEqual("404 Not Found", exception.Message, "Exception message was not correct");
         }
 
         [Test]
@@ -157,7 +161,8 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
 
             // execution/assertion
             TestDelegate testMethod = () => target.Send(new HttpRequest(""));
-            Assert.Throws(typeof(HttpServerErrorException), testMethod);
+            var exception = Assert.Throws(typeof(HttpRequestException), testMethod);
+            Assert.AreEqual("500 Server Error", exception.Message, "Exception message was not correct");
         }
 
         [Test]
@@ -209,5 +214,88 @@ namespace MattBarton.NETMF.Utilities.Test.HttpClientTests
             // assertion
             Assert.AreEqual(content, result, "The http reponse was not correct");
         }
+
+        [Test]
+        public void Given_that_request_is_present_When_sending_Then_request_status_code_is_set()
+        {
+            var content = "some response content";
+            var statusCode = 201;
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(statusCode)
+                .SetStatusDescriptor("OK")
+                .SetResponse(content)
+                .Build();
+
+            var mockSocket = new Mock<IHttpSocket>();
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
+
+            var mockRequest = new HttpRequest("");
+
+            var target = new HttpClient(mockSocket.Object);
+
+            // execution
+            
+            var result = target.Send(mockRequest);
+
+            // assertion
+            Assert.AreEqual(statusCode, mockRequest.StatusCode, "The request status code is not correct");
+        }
+
+        [Test]
+        public void Given_that_request_is_present_and_status_code_indicates_success_When_sending_Then_request_Success_is_set_true()
+        {
+            var content = "some response content";
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(200)
+                .SetStatusDescriptor("OK")
+                .SetResponse(content)
+                .Build();
+
+            var mockSocket = new Mock<IHttpSocket>();
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
+
+            var mockRequest = new HttpRequest("");
+
+            var target = new HttpClient(mockSocket.Object);
+
+            // execution
+
+            var result = target.Send(mockRequest);
+
+            // assertion
+            Assert.IsTrue(mockRequest.Success, "The request success property is not correct");
+        }
+
+        [Test]
+        public void Given_that_request_is_present_and_status_code_indicates_error_When_sending_Then_request_Success_is_set_false()
+        {
+            var content = "some response content";
+            var mockResponse = new HttpResponseBuilder()
+                .SetStatusCode(404)
+                .SetStatusDescriptor("OK")
+                .SetResponse(content)
+                .Build();
+
+            var mockSocket = new Mock<IHttpSocket>();
+            mockSocket
+                .Setup(s => s.Request(It.IsAny<HttpRequest>()))
+                .Returns(mockResponse);
+
+            var mockRequest = new HttpRequest("");
+
+            var target = new HttpClient(mockSocket.Object);
+
+            // execution/assertion
+            TestDelegate method = () => target.Send(mockRequest);
+            var exception = (HttpRequestException)Assert.Throws(typeof (HttpRequestException), method,
+                "Correct exception not thrown");
+
+            Assert.IsFalse(exception.Request.Success, "The request success property is not correct");
+        }
+
     }
 }

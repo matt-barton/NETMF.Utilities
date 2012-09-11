@@ -38,10 +38,7 @@
     <Compile Include="Data\HttpResponseComponents.cs" />
     <Compile Include="Enumerations\HttpMethod.cs" />
     <Compile Include="Exceptions\Http\HttpInvalidResponseException.cs" />
-    <Compile Include="Exceptions\Http\HttpServerErrorException.cs" />
-    <Compile Include="Exceptions\Http\HttpClientErrorException.cs" />
-    <Compile Include="Exceptions\Http\HttpUnhandledRedirectionException.cs" />
-    <Compile Include="Exceptions\Http\HttpUnhandledStatusException.cs" />
+    <Compile Include="Exceptions\Http\HttpRequestException.cs" />
     <Compile Include="Exceptions\Http\HttpUnknownHostException.cs" />
     <Compile Include="Exceptions\Http\HttpSocketConnectionException.cs" />
     <Compile Include="Exceptions\Http\HttpTimeoutException.cs" />

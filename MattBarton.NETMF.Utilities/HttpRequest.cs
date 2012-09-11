@@ -54,6 +54,24 @@ namespace MattBarton.NETMF.Utilities
             }
         }
 
+        public int StatusCode
+        {
+            get;
+            private set;
+        }
+
+        public bool Success
+        {
+            get
+            {
+                if (this.StatusCode.ToString().Substring(0, 1) == "2")
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -90,6 +108,11 @@ namespace MattBarton.NETMF.Utilities
 
                 this._numberOfArguments++;
             }
+        }
+
+        public void SetStatusCode(int statusCode)
+        {
+            this.StatusCode = statusCode;
         }
 
         #endregion
